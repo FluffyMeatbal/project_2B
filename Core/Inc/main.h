@@ -122,6 +122,12 @@ void Error_Handler(void);
 #define MEMS_INT2_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 #define n_overSample 2
+
+// Global Vars
+unsigned int samples[n_overSample];
+char n;
+char movingAverage;
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

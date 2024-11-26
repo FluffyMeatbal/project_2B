@@ -53,9 +53,7 @@ I2C_HandleTypeDef hi2c1;
 TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
-unsigned int samples[n_overSample];
-char n;
-char movingAverage;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -69,7 +67,7 @@ static void MX_TIM3_Init(void);
 void MX_USB_HOST_Process(void);
 
 /* USER CODE BEGIN PFP */
-
+extern void MAF(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -120,22 +118,23 @@ int main(void)
 
   while (1)
     {
-	  char i = 0 ;
-	  char correctSamples = 0;
-	  unsigned int average = 0;
-
-	  while(i < n_overSample)
-	  {
-		  if(samples[i])
-		  {
-			  correctSamples += 1;
-			  average += samples[i];
-		  }
-	  }
-
-	  movingAverage = average / correctSamples;
-
-	  if((average % correctSamples)>(average / 2)) movingAverage += 1;
+	  MAF();
+//	  char i = 0 ;
+//	  char correctSamples = 0;
+//	  unsigned int average = 0;
+//
+//	  while(i < n_overSample)
+//	  {
+//		  if(samples[i])
+//		  {
+//			  correctSamples += 1;
+//			  average += samples[i];
+//		  }
+//	  }
+//
+//	  movingAverage = average / correctSamples;
+//
+//	  if((average % correctSamples)>(average / 2)) movingAverage += 1;
 
     /* USER CODE END WHILE */
     MX_USB_HOST_Process();

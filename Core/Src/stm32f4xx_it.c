@@ -61,10 +61,6 @@ extern TIM_HandleTypeDef htim3;
 /* USER CODE BEGIN EV */
 extern ADC_HandleTypeDef hadc1;
 extern DAC_HandleTypeDef hdac;
-
-extern unsigned int samples[n_overSample];
-extern char n;
-extern char movingAverage;
 /* USER CODE END EV */
 
 /******************************************************************************/
