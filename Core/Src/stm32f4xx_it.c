@@ -204,7 +204,12 @@ void SysTick_Handler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
+	HAL_ADC_Start(&hadc1);										// start conversion
+	HAL_ADC_PollForConversion(&hadc1,11);							// wait for conversion to end -- mux ADC123_IN11 input PC1
+	MA = HAL_ADC_GetValue(&hadc1);							// read value
 
+	HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, tel);	// setvalue on DAC1	PA4
+	HAL_DAC_Start(&hdac, DAC_CHANNEL_1);							// execute new value
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
