@@ -67,7 +67,7 @@ static void MX_TIM3_Init(void);
 void MX_USB_HOST_Process(void);
 
 /* USER CODE BEGIN PFP */
-extern void MAF(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
