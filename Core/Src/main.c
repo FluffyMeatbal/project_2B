@@ -53,7 +53,9 @@ I2C_HandleTypeDef hi2c1;
 TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
-
+unsigned int samples[n_overSample];
+char n;
+char movingAverage;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -98,8 +100,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  int tel;
-  volatile int value1,value2;
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -119,28 +120,23 @@ int main(void)
 
   while (1)
     {
+	  char i = 0 ;
+	  char correctSamples = 0;
+	  unsigned int average = 0;
 
-  	  for (tel=0;tel<1024;tel++)			// select range read the info in the datasheet
-  	  {
-  		  HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, tel);	// setvalue on DAC1	PA4
-  		  HAL_DAC_Start(&hdac, DAC_CHANNEL_1);							// execute new value
-  		  HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, tel); // setvalue on DAC2	PA5
-  		  HAL_DAC_Start(&hdac, DAC_CHANNEL_2);							// execute new value
+	  while(i < n_overSample)
+	  {
+		  if(samples[i])
+		  {
+			  correctSamples += 1;
+			  average += samples[i];
+		  }
+	  }
 
-  		  HAL_Delay(1);													// wait 1 ms
-  		  HAL_ADC_Start(&hadc1);										// start conversion
-  		  HAL_ADC_PollForConversion(&hadc1,11);							// wait for conversion to end -- mux ADC123_IN11 input PC1
-  		  value1 = HAL_ADC_GetValue(&hadc1);							// read value
-  		  value1 ++;
+	  movingAverage = average / correctSamples;
 
-  		  HAL_ADC_Start(&hadc2);
-  		  HAL_ADC_PollForConversion(&hadc2,12);							// wait for conversion to end -- mux ADC123_IN12 input PC2
-  		  value2 = HAL_ADC_GetValue(&hadc2);
-  		  value2 ++;
+	  if((average % correctSamples)>(average / 2)) movingAverage += 1;
 
-
-
-  	  }
     /* USER CODE END WHILE */
     MX_USB_HOST_Process();
 

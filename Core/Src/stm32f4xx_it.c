@@ -59,7 +59,12 @@
 extern HCD_HandleTypeDef hhcd_USB_OTG_FS;
 extern TIM_HandleTypeDef htim3;
 /* USER CODE BEGIN EV */
+extern ADC_HandleTypeDef hadc1;
+extern DAC_HandleTypeDef hdac;
 
+extern unsigned int samples[n_overSample];
+extern char n;
+extern char movingAverage;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -204,17 +209,23 @@ void SysTick_Handler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
-	HAL_ADC_Start(&hadc1);										// start conversion
-	HAL_ADC_PollForConversion(&hadc1,11);							// wait for conversion to end -- mux ADC123_IN11 input PC1
-	MA = HAL_ADC_GetValue(&hadc1);							// read value
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);									// Pin 5A is next to the DAC Input on the cortex M4 board
+	HAL_ADC_Start(&hadc1);														// start conversion
+	HAL_ADC_PollForConversion(&hadc1,11);										// wait for conversion to end -- mux ADC123_IN11 input PC1
+	samples[n] = HAL_ADC_GetValue(&hadc1);										// read value
 
-	HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, tel);	// setvalue on DAC1	PA4
-	HAL_DAC_Start(&hdac, DAC_CHANNEL_1);							// execute new value
+	n < n_overSample ? n + 1 : 0;												// increment n if n =! n_overSample else n becomes 0
+
+	if(movingAverage)
+	{
+		HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_8B_R, movingAverage);	// setvalue on DAC1	PA4
+		HAL_DAC_Start(&hdac, DAC_CHANNEL_1);									// execute new value
+	}
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
 
-  HAL_GPIO_TogglePin(GPIOD, LD4_Pin);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
   /* USER CODE END TIM3_IRQn 1 */
 }
 
