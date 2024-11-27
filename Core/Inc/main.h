@@ -126,7 +126,7 @@ extern void MAF(void);
 // Global Vars
 unsigned int samples[n_overSample];
 char n;
-char movingAverage;
+unsigned char movingAverage;
 
 /* USER CODE END Private defines */
 
