@@ -4,4 +4,4 @@
 #exept
 !project_2B.ioc
 !.project.project
-!**/core/**/*
+!core/**/*
